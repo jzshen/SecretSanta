@@ -11,6 +11,7 @@ class GroupsController < ApplicationController
   # GET /groups/1.json
   def show
     @group = Group.find(params[:id])
+    @group_members = Membership.where(group_id: params[:id]).all
   end
 
   # GET /groups/new
@@ -26,9 +27,9 @@ class GroupsController < ApplicationController
   # POST /groups.json
   def create
     @group = Group.new(group_params)
-    @group.users << current_user
     respond_to do |format|
       if @group.save
+        @membership = Membership.new(group_id: @group.id, user_id: current_user.id, admin: true)
         format.html { redirect_to @group, notice: 'Group was successfully created.' }
         format.json { render :show, status: :created, location: @group }
       else
@@ -39,10 +40,10 @@ class GroupsController < ApplicationController
   end
 
   def join
-    #@group = Group.find(group_params)
-    @member = Member.create(group_id: params[:id], user_id: current_user.id)
+    @group = Group.find(params[:id])
+    @membership = Membership.create(group_id: params[:id], user_id: current_user.id)
     respond_to do |format|
-      if @member.save
+      if @membership.save
         format.html { redirect_to @group, notice: 'You have joined this group.' }
         format.json { render :show, status: :ok, location: @group }
       else
@@ -52,6 +53,20 @@ class GroupsController < ApplicationController
     end
   end
 
+  def leave
+    @group = Group.find(params[:id])
+    @membership = Membership.find_by(group_id: params[:id], user_id: current_user.id)
+    respond_to do |format|
+      if @membership
+        @membership.destroy
+        format.html { redirect_to @group, notice: 'Bye Felicia!' }
+        format.json { render :show, status: :ok, location: @group }
+      else
+        format.html {redirect_to @group, notice: 'You were never apart of this group'}
+        format.json
+      end
+    end  
+  end
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json

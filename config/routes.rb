@@ -1,17 +1,19 @@
 Rails.application.routes.draw do
+    
+    root 'pages#home'
+    get     'signup'  => 'users#new'
+    get     'login'   => 'sessions#new'
+    post    'login'   => 'sessions#create'
+    delete  'logout'  => 'sessions#destroy'
+    get     'join'    => 'members#create'
+
+    resources :microposts
     resources :users
     resources :groups do
-      member do
-        get 'join'
-      end
+        collection do
+            get 'join'
+            get 'leave'
+        end
     end
-    get 'signup' => 'users#new'
-    get 'login' => 'sessions#new'
-    post 'login' => 'sessions#create'
-    delete 'logout' => 'sessions#destroy'
-    get 'welcome/index'
-
-
-    root 'welcome#index'
 
 end

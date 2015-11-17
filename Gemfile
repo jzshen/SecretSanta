@@ -32,6 +32,9 @@ gem 'composite_primary_keys'
 #To add bootstrap
 gem 'bootstrap-sass'
 
+#To add user ability restrictions
+gem 'cancancan'
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 

@@ -1,10 +1,17 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @group.name %>
-</p>
 
-<%= link_to "Join this group", join_group_path(@group) %>
+  <h1>Name: <%= @group.name %></h1>
+
+  <strong>Group Members:</strong>
+  <ul>
+  <%= @group_members.each do |member| %>
+  	<li><%= link_to User.where(id: member.user_id).first.first_name, user_path(id: member.user_id) %></li>
+  <% end %>
+  </ul>
+
+
+<%#= link_to 'Join', new_group_membership_path(@group, current_user) %>
+<%#= link_to 'Match', match_group_path(@group) %> |
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>

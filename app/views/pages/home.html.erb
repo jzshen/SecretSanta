@@ -1,0 +1,29 @@
+<h1>JenShen's Secret Santa App</h1>
+<h2>Welcome Scarberians, this is just for you.</h2>
+
+<% if logged_in? %>
+  <div class="row">
+    <aside class="col-md-4">
+      <section class="user_info">
+        <%= current_user.first_name %>
+      </section>
+      <section class="stats">
+        <p>Stats</p>
+      </section>
+      <section class="micropost_form">
+        <p>Form<p>
+      </section>
+    </aside>
+    <div class="col-md-8">
+      <h3>Information</h3>
+      	<p>Feed</p>
+    </div>
+  </div>
+<% else %>
+  <div class="center jumbotron">
+  	<h1>JenShen's Secret Santa App</h1>
+  	<h2>Welcome Scarberians, this is just for you.</h2>
+    <%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary" %>
+   </div>
+<% end %>
+

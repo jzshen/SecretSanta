@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   attr_accessor :remember_token
-  has_many :members, :dependent => :destroy
+  has_many :memberships, :dependent => :destroy
   has_many :groups, :through => :memberships
   before_save { self.email = email.downcase }
   validates :first_name, :last_name, presence: true, length: { maximum: 50 }
