@@ -11,7 +11,7 @@
   </ul>
 
 
-<%#= link_to 'Join', new_group_membership_path(@group, current_user) %>
-<%#= link_to 'Match', match_group_path(@group) %> |
+<%= link_to 'Join', join_groups_path(id: @group.id) %> |
+<%= link_to 'Match', groups_match_path(id: @group.id), remote: true%> |
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>

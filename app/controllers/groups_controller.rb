@@ -29,7 +29,7 @@ class GroupsController < ApplicationController
     @group = Group.new(group_params)
     respond_to do |format|
       if @group.save
-        @membership = Membership.new(group_id: @group.id, user_id: current_user.id, admin: true)
+        @membership = Membership.create!(group_id: @group.id, user_id: current_user.id, admin: true)
         format.html { redirect_to @group, notice: 'Group was successfully created.' }
         format.json { render :show, status: :created, location: @group }
       else
@@ -41,13 +41,14 @@ class GroupsController < ApplicationController
 
   def join
     @group = Group.find(params[:id])
-    @membership = Membership.create(group_id: params[:id], user_id: current_user.id)
+    @membership = Membership.create(group_id: params[:id], user_id: current_user.id, admin: false)
     respond_to do |format|
       if @membership.save
         format.html { redirect_to @group, notice: 'You have joined this group.' }
         format.json { render :show, status: :ok, location: @group }
       else
-        format.html { render :show }
+        @group_members = Membership.where(group_id: params[:id]).all #sketchy
+        format.html { render :show, notice: 'You have already joined this group' }
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end
@@ -63,10 +64,26 @@ class GroupsController < ApplicationController
         format.json { render :show, status: :ok, location: @group }
       else
         format.html {redirect_to @group, notice: 'You were never apart of this group'}
-        format.json
+        format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end  
   end
+
+  def match
+    logger.info "matching again ..."
+    @group = Group.find(params[:id])
+    @group_members_id = Membership.where(group_id: params[:id]).pluck(:user_id)
+    @taken = Array.new
+    @available = @group_members_id
+    @matches = Hash.new
+    @group_members_id.each do |id|
+      match_id = @available.sample(1)
+      @taken << match_id
+      @matches[id] = match_id
+    end
+    @group.update(:matches => @matches)
+  end
+
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json

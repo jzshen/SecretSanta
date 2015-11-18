@@ -18,7 +18,7 @@
         <td><%= link_to 'Edit', edit_group_path(group) %></td>
         <!--Try to make less sketchy-->
           <%#= form_for group, :url =>  join_group_path(group) do |f| %>
-            <td><%= link_to 'Join', join_groups_path(id: group.id, user_id: current_user.id) %></td>
+            <td><%= link_to 'Join', join_groups_path(id: group.id) %></td>
             <td><%#= f.submit "Join" %></td>
             <td><%= link_to 'Leave', leave_groups_path(id: group.id, user_id: current_user.id) %></td>
           <% #end %>

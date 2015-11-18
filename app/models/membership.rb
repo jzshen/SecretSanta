@@ -2,8 +2,8 @@ class Membership < ActiveRecord::Base
 	belongs_to :group 
 	belongs_to :user
 	has_many :statuses, :class_name => 'MemberStatus', :foreign_key => [:user_id, :group_id]
-	validates_presence_of :group_id, :user_id, :admin
-
+	validates :group_id, uniqueness: { scope: :user_id }
+	
 
 	def self.join_group(user: nil, group: nil)
 		user.ability.authorize! :join, group
