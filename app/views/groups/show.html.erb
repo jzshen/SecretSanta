@@ -12,6 +12,6 @@
 
 
 <%= link_to 'Join', join_groups_path(id: @group.id) %> |
-<%= link_to 'Match', groups_match_path(id: @group.id), remote: true%> |
+<%= button_to 'Match', groups_match_path(id: @group.id), method: :post%> |
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>

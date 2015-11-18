@@ -74,14 +74,25 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @group_members_id = Membership.where(group_id: params[:id]).pluck(:user_id)
     @taken = Array.new
-    @available = @group_members_id
+    @available = Membership.where(group_id: params[:id]).pluck(:user_id)
     @matches = Hash.new
+    logger.info @group_members_id.to_s
     @group_members_id.each do |id|
-      match_id = @available.sample(1)
+      logger.info "ID: " + id.to_s + "\n"
+      @available.delete(id)
+      match_id = @available.sample(1).pop
+      logger.info "MATCH: " + match_id.to_s + "\n"
       @taken << match_id
       @matches[id] = match_id
+      if !@taken.include? id
+        @available.push(id)
+      end
     end
     @group.update(:matches => @matches)
+    respond_to do |format|
+        format.html { redirect_to @group, notice: 'Matches created.' }
+        format.json { render :show, status: :ok, location: @group }
+    end
   end
 
 

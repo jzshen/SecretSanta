@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     post    'login'         => 'sessions#create'
     delete  'logout'        => 'sessions#destroy'
     get     'join'          => 'members#create'
-    get     'groups/match'  
+    post     'groups/match'  
 
     resources :microposts
     resources :users
