@@ -4,14 +4,16 @@
   <h1>Name: <%= @group.name %></h1>
 
   <strong>Group Members:</strong>
+  
+  <% @group_members.each do |member| %>
   <ul>
-  <%= @group_members.each do |member| %>
   	<li><%= link_to User.where(id: member.user_id).first.first_name, user_path(id: member.user_id) %></li>
-  <% end %>
   </ul>
+  <% end %>
+  
 
-
+<br>
 <%= link_to 'Join', join_groups_path(id: @group.id) %> |
-<%= button_to 'Match', groups_match_path(id: @group.id), method: :post%> |
+<%= link_to 'Match', groups_match_path(id: @group.id), method: :post%> |
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>
