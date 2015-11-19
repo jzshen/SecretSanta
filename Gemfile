@@ -50,6 +50,7 @@ group :development, :test do
   gem 'spring'
   # Use sqlite3 as the database for Active Record
   #gem 'sqlite3'
+  gem 'pg', 		'0.17.1'
 end
 
 #For heroku deplyment
