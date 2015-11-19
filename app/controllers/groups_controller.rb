@@ -87,9 +87,12 @@ class GroupsController < ApplicationController
       if !@taken.include? id
         @available.push(id)
       end
+      @available.delete(match_id)
+      logger.info "TAKEN: " + @taken.to_s
+      logger.info "AVAILABLE: " + @available.to_s
     end
     @group.update(:matches => @matches)
-    @group.updated(:matched => true)
+    @group.update(:matched => true)
     respond_to do |format|
         format.html { redirect_to @group, notice: 'Matches created.' }
         format.json { render :show, status: :ok, location: @group }
@@ -98,7 +101,11 @@ class GroupsController < ApplicationController
 
   def mymatch
     @group = Group.find(params[:id])
-    @match = User.find(@group.matches[current_user.id]).first_name
+    if(@group.matches[current_user.id])
+      @match = User.find(@group.matches[current_user.id]).first_name
+    else
+      @match = "There were not enough people"
+    end
   end
 
   # PATCH/PUT /groups/1

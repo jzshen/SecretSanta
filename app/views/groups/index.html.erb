@@ -2,26 +2,18 @@
 
 <table>
   <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
+      <h3>Name</h3>
   </thead>
 
   <tbody>
     <% @groups.each do |group| %>
-      <tr>
-        <td><%= group.name %></td>
-        <td><%= link_to 'Show', group %></td>
-        <td><%= link_to 'Edit', edit_group_path(group) %></td>
+      <strong><%= group.name %></strong> |
+      <%= link_to 'Show', group %> | 
+      <%= link_to 'Edit', edit_group_path(group) %> | 
         <!--Try to make less sketchy-->
-          <%#= form_for group, :url =>  join_group_path(group) do |f| %>
-            <td><%= link_to 'Join', join_groups_path(id: group.id) %></td>
-            <td><%#= f.submit "Join" %></td>
-            <td><%= link_to 'Leave', leave_groups_path(id: group.id, user_id: current_user.id) %></td>
-          <% #end %>
-        <td><%= link_to 'Destroy', group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+            <%= link_to 'Join', join_groups_path(id: group.id) %> | 
+            <%= link_to 'Leave', leave_groups_path(id: group.id, user_id: current_user.id) %> | 
+      <%= link_to 'Destroy', group, method: :delete, data: { confirm: 'Are you sure?' } %>
     <% end %>
   </tbody>
 </table>

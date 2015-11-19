@@ -15,7 +15,7 @@
 	<% if @group.matched == false %>
 		<%= link_to 'Match', groups_match_path(id: @group.id), method: :post%> |
 	<% else %>
-		<%= link_to 'View Your Match', groups_mymatch_path(id: @group.id) %>
+		<%= link_to 'View Your Match', groups_mymatch_path(id: @group.id) %> |
 	<% end %>
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>
