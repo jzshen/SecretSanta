@@ -89,12 +89,17 @@ class GroupsController < ApplicationController
       end
     end
     @group.update(:matches => @matches)
+    @group.updated(:matched => true)
     respond_to do |format|
         format.html { redirect_to @group, notice: 'Matches created.' }
         format.json { render :show, status: :ok, location: @group }
     end
   end
 
+  def mymatch
+    @group = Group.find(params[:id])
+    @match = User.find(@group.matches[current_user.id]).first_name
+  end
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json

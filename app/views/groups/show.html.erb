@@ -1,19 +1,21 @@
-<p id="notice"><%= notice %></p>
+<h1>Name: <%= @group.name %></h1>
 
+<strong>Group Members:</strong>
 
-  <h1>Name: <%= @group.name %></h1>
+<% @group_members.each do |member| %>
+	<ul>
+		<li><%= link_to User.where(id: member.user_id).first.first_name, user_path(id: member.user_id) %></li>
+	</ul>
+<% end %>
 
-  <strong>Group Members:</strong>
-  
-  <% @group_members.each do |member| %>
-  <ul>
-  	<li><%= link_to User.where(id: member.user_id).first.first_name, user_path(id: member.user_id) %></li>
-  </ul>
-  <% end %>
-  
 
 <br>
 <%= link_to 'Join', join_groups_path(id: @group.id) %> |
-<%= link_to 'Match', groups_match_path(id: @group.id), method: :post%> |
+<%= link_to 'Leave', leave_groups_path(id: @group.id) %> |
+	<% if @group.matched == false %>
+		<%= link_to 'Match', groups_match_path(id: @group.id), method: :post%> |
+	<% else %>
+		<%= link_to 'View Your Match', groups_mymatch_path(id: @group.id) %>
+	<% end %>
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>

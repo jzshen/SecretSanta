@@ -19,6 +19,7 @@ class MembershipController < ApplicationController
     end
   end
 
+
   def destroy
     @membership = current_user.memberships.find(params[:id])
     @membership.destroy
