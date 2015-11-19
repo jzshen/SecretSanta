@@ -50,6 +50,7 @@ group :development, :test do
   gem 'spring'
   # Use sqlite3 as the database for Active Record
   #gem 'sqlite3'
+end
 
 #For heroku deplyment
 group :production do
@@ -58,5 +59,4 @@ group :production do
   gem 'puma',           '2.11.1'
 end
 
-end
 
