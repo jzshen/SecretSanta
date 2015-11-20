@@ -11,7 +11,7 @@ class GroupsController < ApplicationController
   # GET /groups/1.json
   def show
     @group_members = Membership.where(group_id: @group.id).all
-    @members_count = @group_members.count
+    @members_count = @group_members.count 
     @is_member = @group_members.exists?(user_id: current_user.id)
     @is_admin = @group_members.exists?(user_id: current_user.id, admin: true)
   end
@@ -150,7 +150,7 @@ class GroupsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
-      @group = Group.find_by(name: params[:id])
+      @group = Group.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

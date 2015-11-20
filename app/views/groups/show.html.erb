@@ -11,7 +11,7 @@
 
 <% if @is_member %>
 	<%= link_to 'Leave', leave_groups_path(id: @group.name) %> |
-		<% if @group.matched == false  && @memebrs_cout >= 2 %>
+		<% if @group.matched == false  && @members_count >= 2 %>
 			<%= link_to 'Match', groups_match_path(id: @group.name), method: :post%> |
 		<% else %>
 			<%= link_to 'View Your Match', groups_mymatch_path(id: @group.name) %> |

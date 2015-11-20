@@ -1,6 +1,7 @@
 class Group < ActiveRecord::Base
 	has_many :memberships, :dependent => :destroy
 	has_many :users, :through => :memberships
+	#validates :slug, precense: true
 	validates :name, presence: true, uniqueness: true
 	serialize :matches
 
@@ -20,8 +21,15 @@ class Group < ActiveRecord::Base
 			m.user  = user
 		end
 	end
+	
+=begin
+	def slug
+    	name.downcase.gsub(" ", "-")  
+  	end
 
 	def to_param
-		name
+		slug
 	end
+=end
+
 end
