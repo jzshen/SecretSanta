@@ -7,7 +7,8 @@ Rails.application.routes.draw do
     delete  'logout'            => 'sessions#destroy'
     get     'join'              => 'membership#create'
     get     'groups/mymatch'    => 'groups#mymatch'
-    post     'groups/match'  
+    post    'groups/match'       => 'groups#match'
+    post    'groups/unmatch'    => 'groups#unmatch'
 
     resources :microposts
     resources :users

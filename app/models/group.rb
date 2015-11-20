@@ -1,7 +1,7 @@
 class Group < ActiveRecord::Base
 	has_many :memberships, :dependent => :destroy
 	has_many :users, :through => :memberships
-	validates :name, presence: true
+	validates :name, presence: true, uniqueness: true
 	serialize :matches
 
 	def add_member!(user)
@@ -19,5 +19,9 @@ class Group < ActiveRecord::Base
 			m.group = self
 			m.user  = user
 		end
+	end
+
+	def to_param
+		name
 	end
 end

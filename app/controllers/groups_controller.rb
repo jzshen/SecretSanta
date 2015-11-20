@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :join, :leave, :match, :mymatch, :unmatch]
 
   # GET /groups
   # GET /groups.json
@@ -10,8 +10,10 @@ class GroupsController < ApplicationController
   # GET /groups/1
   # GET /groups/1.json
   def show
-    @group = Group.find(params[:id])
-    @group_members = Membership.where(group_id: params[:id]).all
+    @group_members = Membership.where(group_id: @group.id).all
+    @members_count = @group_members.count
+    @is_member = @group_members.exists?(user_id: current_user.id)
+    @is_admin = @group_members.exists?(user_id: current_user.id, admin: true)
   end
 
   # GET /groups/new
@@ -40,14 +42,13 @@ class GroupsController < ApplicationController
   end
 
   def join
-    @group = Group.find(params[:id])
-    @membership = Membership.create(group_id: params[:id], user_id: current_user.id, admin: false)
+    @membership = Membership.create(group_id: @group.id, user_id: current_user.id, admin: false)
     respond_to do |format|
       if @membership.save
         format.html { redirect_to @group, notice: 'You have joined this group.' }
         format.json { render :show, status: :ok, location: @group }
       else
-        @group_members = Membership.where(group_id: params[:id]).all #sketchy
+        @group_members = Membership.where(group_id: @group.id).all #sketchy
         format.html { render :show, notice: 'You have already joined this group' }
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
@@ -55,8 +56,7 @@ class GroupsController < ApplicationController
   end
 
   def leave
-    @group = Group.find(params[:id])
-    @membership = Membership.find_by(group_id: params[:id], user_id: current_user.id)
+    @membership = Membership.find_by(group_id: @group.id, user_id: current_user.id)
     respond_to do |format|
       if @membership
         @membership.destroy
@@ -70,11 +70,10 @@ class GroupsController < ApplicationController
   end
 
   def match
-    logger.info "matching again ..."
-    @group = Group.find(params[:id])
-    @group_members_id = Membership.where(group_id: params[:id]).pluck(:user_id)
+    logger.info "Matching..."
+    @group_members_id = Membership.where(group_id: @group.id).pluck(:user_id)
     @taken = Array.new
-    @available = Membership.where(group_id: params[:id]).pluck(:user_id)
+    @available = Membership.where(group_id: @group.id).pluck(:user_id)
     @matches = Hash.new
     logger.info @group_members_id.to_s
     @group_members_id.each do |id|
@@ -99,13 +98,29 @@ class GroupsController < ApplicationController
     end
   end
 
-  def mymatch
-    @group = Group.find(params[:id])
-    if(@group.matches[current_user.id])
-      @match = User.find(@group.matches[current_user.id]).first_name
-    else
-      @match = "There were not enough people"
+  def unmatch
+    logger.info "Unmatching..."
+    @member = Membership.where(user_id: params[:user_id], group_id: @group.id).first
+    respond_to do |format|
+      if @group.matched != true
+        format.html { redirect_to @group, notice: 'Group is not matched.' }
+        format.json { render :show, status: :ok, location: @group }
+      elsif @member.admin == true
+        @group.matches.clear
+        @group.update(matched: false)
+        @group.save
+        format.html { redirect_to @group, notice: 'Group is unmatched.' }
+        format.json { render :show, status: :ok, location: @group }
+      else 
+        format.html { redirect_to @group, notice: 'Sorry you are not an admin, ask your admin to unmatch.' }
+        format.json { render :show, status: :ok, location: @group }
+      end
     end
+  end
+
+  def mymatch
+    @match = User.find(@group.matches[current_user.id])
+    @full_name = @match.first_name + " " + @match.last_name
   end
 
   # PATCH/PUT /groups/1
@@ -135,7 +150,7 @@ class GroupsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
-      @group = Group.find(params[:id])
+      @group = Group.find_by(name: params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

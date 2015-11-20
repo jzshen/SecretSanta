@@ -7,15 +7,23 @@
 		<li><%= link_to User.where(id: member.user_id).first.first_name, user_path(id: member.user_id) %></li>
 	</ul>
 <% end %>
-
-
 <br>
-<%= link_to 'Join', join_groups_path(id: @group.id) %> |
-<%= link_to 'Leave', leave_groups_path(id: @group.id) %> |
-	<% if @group.matched == false %>
-		<%= link_to 'Match', groups_match_path(id: @group.id), method: :post%> |
-	<% else %>
-		<%= link_to 'View Your Match', groups_mymatch_path(id: @group.id) %> |
+
+<% if @is_member %>
+	<%= link_to 'Leave', leave_groups_path(id: @group.name) %> |
+		<% if @group.matched == false  && @memebrs_cout >= 2 %>
+			<%= link_to 'Match', groups_match_path(id: @group.name), method: :post%> |
+		<% else %>
+			<%= link_to 'View Your Match', groups_mymatch_path(id: @group.name) %> |
+		<% end %>
+<% else %>
+	<%= link_to 'Join', join_groups_path(id: @group.name, user_id: current_user.id) %> |
+<% end %>
+
+<% if @is_admin %>
+	<%= link_to 'Edit', edit_group_path(@group) %> |
+	<% if @group.matched %>
+		<%= link_to 'UnMatch', groups_unmatch_path(id: @group.name, user_id: current_user.id), method: :post %> |
 	<% end %>
-<%= link_to 'Edit', edit_group_path(@group) %> |
+<% end %>
 <%= link_to 'Back', groups_path %>
