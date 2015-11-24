@@ -1,0 +1,18 @@
+<h1>Admin Page: <%= @group.name %></h1>
+
+<strong>Preferences: </strong>
+<% @group_members.each do |member| %>
+	<ul>
+		<li><%= User.where(id: member.user_id).first.first_name %>
+
+		</li>
+	</ul>
+<% end %>
+
+
+<strong>Matches: </strong>
+<% if @matches == nil %>
+	<p>No matches yet.</p>
+<% else %>
+	<p><%= @matches %></p>
+<% end %>

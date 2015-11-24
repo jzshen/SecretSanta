@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :join, :leave, :match, :mymatch, :unmatch]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :join, :leave, :match, :mymatch, :unmatch, :admin_page]
 
   # GET /groups
   # GET /groups.json
@@ -96,6 +96,11 @@ class GroupsController < ApplicationController
         format.html { redirect_to @group, notice: 'Matches created.' }
         format.json { render :show, status: :ok, location: @group }
     end
+  end
+
+  def admin_page
+    @matches = @group.matches
+    @group_members = Membership.where(group_id: @group.id).all
   end
 
   def unmatch

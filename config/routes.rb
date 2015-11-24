@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     get     'groups/mymatch'    => 'groups#mymatch'
     post    'groups/match'       => 'groups#match'
     post    'groups/unmatch'    => 'groups#unmatch'
+    get     'groups/admin_page' => 'groups#admin_page'
 
     resources :microposts
     resources :users

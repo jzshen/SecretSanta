@@ -3,12 +3,7 @@ class Membership < ActiveRecord::Base
 	belongs_to :user
 	has_many :statuses, :class_name => 'MemberStatus', :foreign_key => [:user_id, :group_id]
 	validates :group_id, uniqueness: { scope: :user_id }
-	
-
-	def self.join_group(user: nil, group: nil)
-		user.ability.authorize! :join, group
-		member = group.add_member!(user)
-	end
+	serialize :membership_preferences
 
 	def group_name
   		if self.group
@@ -20,5 +15,6 @@ class Membership < ActiveRecord::Base
   		@group_name = group_name
   		self.group = Group.find_by_name(@group_name)
 	end
+
 
 end
