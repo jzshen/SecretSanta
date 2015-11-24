@@ -11,9 +11,7 @@
 
 <% if @is_member %>
 	<%= link_to 'Leave', leave_groups_path(id: @group.id) %> |
-		<% if @group.matched == false  && @members_count >= 2 %>
-			<%= link_to 'Match', groups_match_path(id: @group.id), method: :post%> |
-		<% else %>
+		<% if !@group.matched == false  %>
 			<%= link_to 'View Your Match', groups_mymatch_path(id: @group.id) %> |
 		<% end %>
 <% else %>
@@ -23,6 +21,9 @@
 <% end %>
 
 <% if @is_admin %>
+	<% if @members_count >= 2 %>
+		<%= link_to 'Match', groups_match_path(id: @group.id), method: :post%> |
+	<% end %>
 	<%= link_to 'Edit', edit_group_path(@group) %> |
 	<% if @group.matched %>
 		<%= link_to 'UnMatch', groups_unmatch_path(id: @group.id, user_id: current_user.id), method: :post %> |
